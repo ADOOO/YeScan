@@ -4,6 +4,10 @@
 from conf.config import *
 # import libs.pymysql as pymysql
 from common import *
+import libs.gevent as gevent
+from libs.gevent import monkey; monkey.patch_all()
+
+from Queue import Queue
 
 from subprocess import Popen,PIPE
 import sys
@@ -18,19 +22,36 @@ class YeScan(object):
 
 	def __init__(self, data):
 		self.data = data
+		self.queue = Queue()
 		self.result = {}
 		self.temp = []
 
 	def run(self):
 		# result = {}
 		
-
 		for allData in self.data:
+			self.queue.put(allData)
+
+		gevent_pool = []
+
+		for i in range(thread_count):
+			gevent_pool.append(gevent.spawn(self.sqlMapScna, self.queue))
+		gevent.joinall(gevent_pool)
+			# print dataid,reqData
+
+		self.result[YeScan.category] = self.temp
+
+		# print self.result
+		return self.result
+
+	def sqlMapScna(self, queue):
+
+		while not queue.empty():
+			allData = queue.get_nowait()
 
 			dataid = allData[0]
 			reqData = allData[4]
 			reqUrl = allData[2]
-			# print dataid,reqData
 
 			if 'sqlrun.' in reqData:
 				sqlData = sqli(dataid=dataid, method='checksql', host=None)
@@ -56,13 +77,8 @@ class YeScan(object):
 					print colored('[!]<{}> Error:\n{}'.format(self.getTime(),e.__doc__), 'red')
 					sqli(dataid=dataid, method='updatesql', host=None)
 					pass
-
 			sqli(dataid=dataid, method='updatesql', host=None)
 
-		self.result[YeScan.category] = self.temp
-
-		# print self.result
-		return self.result
 
 
 	def creatFile(self,req):

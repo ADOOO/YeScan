@@ -30,7 +30,7 @@ class TaskManage(object):
 	def run(self):
 		# print colored('[*]<{}> Start Run ...'.format(self.getTime()),'green')
 		logging.info(colored('[*]Start Run ...','green'))
-		schedule.every(10).seconds.do(self.scan)
+		schedule.every(freq).seconds.do(self.scan)
 		try:
 			while True:
 				schedule.run_pending()
@@ -118,7 +118,7 @@ if __name__ == '__main__':
 +-------------------------------------------+
 '''
 
-	parser = argparse.ArgumentParser(description="Port Scan Ver:1.0")
+	parser = argparse.ArgumentParser(description="Ye Scan Ver:1.0")
 	parser.add_argument("-t", "--target", metavar="" , help="scan target")
 
 	args = parser.parse_args()

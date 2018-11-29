@@ -6,9 +6,11 @@ ip = '127.0.0.1'
 port = 3306
 db = 'burpsuiteHistory'
 user = 'root'
-pwd = 'your_pwd'
+pwd = 'mysql@'
 charset = 'utf8'
 
+# Run frequency
+freq = 10
 
 # History save Config
 static = ['gif','jpg','png','jpeg', 'css','swf','ico']
@@ -17,3 +19,4 @@ static = ['gif','jpg','png','jpeg', 'css','swf','ico']
 # SqlInj plugins setting
 sqlmapPath = '/Users/ado/BackUp/Pentest/Tool/Burp/bapps/saveReq/libs/sqlmap/sqlmap.py'
 reqPath = '/Users/ado/BackUp/Pentest/Tool/Burp/bapps/saveReq/temp/'
+thread_count = 10
